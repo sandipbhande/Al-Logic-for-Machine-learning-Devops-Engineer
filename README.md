@@ -153,6 +153,6 @@ Then open:
 - Add alert rules for anomaly spikes and service health
 
 ## One-Line Explanation
-<img width="1887" height="922" alt="Screenshot 2026-03-30 131837" src="https://github.com/user-attachments/assets/5fc7ca92-0350-402f-ae84-d912af13dbc6" />
+<img width="1527" height="917" alt="Screenshot 2026-03-30 132910" src="https://github.com/user-attachments/assets/8bf73c59-89ee-47e3-8678-cd122e99cb18" />
 
 AI Logic for Analyst converts Windows event logs into structured data and uses analysis plus machine learning to find important patterns, anomalies, and security issues.
