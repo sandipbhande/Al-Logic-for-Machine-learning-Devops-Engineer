@@ -1,0 +1,23 @@
+AI Log Analyzer Model Training Report
+====================================
+Rows used for training: 19287
+
+Trained models:
+- isolation_forest: anomalies=970, threshold=0.4751
+- local_outlier_factor: anomalies=966, threshold=4.2046
+- sgd_one_class_svm: anomalies=965, threshold=-2.6847
+- mini_batch_kmeans: anomalies=965, threshold=1.9685
+
+Ensemble anomalies (flagged by at least 2 models): 533
+
+Top 10 suspicious log rows:
+- time=2026-01-18 12:34:04.917978+00:00, provider=Microsoft-Windows-Kernel-General, event_id=16, level=4, votes=4, message=137 | \??\C:\ProgramData\Microsoft\Windows\AppRepository\Packages\Microsoft.WindowsTerminal_1.18.10301.0_x64__8wekyb3d8bbwe\ActivationStore.
+- time=2026-01-18 12:34:21.642796+00:00, provider=Microsoft-Windows-Kernel-General, event_id=16, level=4, votes=4, message=85 | \??\C:\ProgramData\Microsoft\Provisioning\Microsoft-Desktop-Provisioning-Sequence.dat | 0 | 0
+- time=2026-01-18 12:33:09.669567+00:00, provider=Microsoft-Windows-HttpService, event_id=112, level=4, votes=3, message=http://*:5357/ | 0 | 4 | S-1-5-18
+- time=2026-01-18 12:33:09.669575+00:00, provider=Microsoft-Windows-HttpService, event_id=112, level=4, votes=3, message=http://+:80/Temporary_Listen_Addresses/ | 0 | 4 | S-1-5-18
+- time=2026-01-18 12:33:09.669584+00:00, provider=Microsoft-Windows-HttpService, event_id=112, level=4, votes=3, message=http://*:2869/ | 0 | 4 | S-1-5-18
+- time=2026-01-18 12:33:09.669603+00:00, provider=Microsoft-Windows-HttpService, event_id=112, level=4, votes=3, message=http://+:47001/wsman/ | 0 | 4 | S-1-5-18
+- time=2026-01-18 12:33:09.669607+00:00, provider=Microsoft-Windows-HttpService, event_id=112, level=4, votes=3, message=http://+:5985/wsman/ | 0 | 4 | S-1-5-18
+- time=2026-01-18 12:33:09.669617+00:00, provider=Microsoft-Windows-HttpService, event_id=112, level=4, votes=3, message=http://+:3387/rdp/ | 0 | 4 | S-1-5-18
+- time=2026-01-18 12:33:09.669632+00:00, provider=Microsoft-Windows-HttpService, event_id=112, level=4, votes=3, message=http://+:10247/apps/ | 0 | 4 | S-1-5-18
+- time=2026-01-18 12:33:09.669643+00:00, provider=Microsoft-Windows-HttpService, event_id=112, level=4, votes=3, message=http://+:10243/WMPNSSv4/ | 0 | 4 | S-1-5-18

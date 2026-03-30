@@ -1,0 +1,8 @@
+Evtx
+Flask
+gunicorn
+joblib
+numpy
+pandas
+scikit-learn
+scipy

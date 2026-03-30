@@ -1,0 +1,13 @@
+apiVersion: 1
+
+providers:
+  - name: al-logic
+    orgId: 1
+    folder: AI Logic for Analyst
+    type: file
+    disableDeletion: false
+    editable: true
+
+    options:
+      path: /var/lib/grafana/dashboards
+      

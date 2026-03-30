@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI Logic for Analyst</title>
+    <style>
+        :root {
+            --bg: #f4f1ea;
+            --panel: #fffdf8;
+            --line: #d8d0c1;
+            --text: #1f2933;
+            --muted: #5f6c7b;
+            --accent: #c96f3b;
+            --accent-dark: #8b4b2a;
+            --alert: #a63a2f;
+            --ok: #2d6a4f;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top right, rgba(201, 111, 59, 0.18), transparent 28%),
+                linear-gradient(180deg, #f7f2e8 0%, var(--bg) 100%);
+        }
+
+        .page {
+            width: min(1400px, calc(100% - 32px));
+            margin: 24px auto 40px;
+        }
+
+        .hero,
+        .panel {
+            background: rgba(255, 253, 248, 0.96);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            box-shadow: 0 12px 40px rgba(88, 71, 48, 0.08);
+        }
+
+        .hero {
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(201, 111, 59, 0.12);
+            color: var(--accent-dark);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        h1, h2 {
+            margin: 0 0 10px;
+        }
+
+        p {
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .metric {
+            padding: 18px;
+            border-radius: 16px;
+            background: linear-gradient(180deg, #fff8f0 0%, #fffdf9 100%);
+            border: 1px solid rgba(201, 111, 59, 0.2);
+        }
+
+        .metric-label {
+            color: var(--muted);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+
+        .panel {
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+
+        form.filters {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 14px;
+            align-items: end;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: #fff;
+            color: var(--text);
+        }
+
+        .checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .checkbox input {
+            width: auto;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 11px 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-dark);
+            border-color: rgba(201, 111, 59, 0.35);
+        }
+
+        .status {
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        .status.ok {
+            color: var(--ok);
+        }
+
+        .status.alert {
+            color: var(--alert);
+        }
+
+        .table-wrap {
+            overflow: auto;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+            background: white;
+        }
+
+        th,
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #ece5d8;
+            text-align: left;
+            font-size: 14px;
+            vertical-align: top;
+        }
+
+        th {
+            position: sticky;
+            top: 0;
+            background: #faf4ea;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        @media (max-width: 1100px) {
+            .grid,
+            form.filters {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 700px) {
+            .page {
+                width: min(100% - 20px, 100%);
+            }
+
+            .grid,
+            form.filters {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <section class="hero">
+            <span class="eyebrow">Analyst Workspace</span>
+            <h1>AI Logic for Analyst</h1>
+            <p>Browse parsed Windows logs, search messages, and inspect machine-learning anomaly results in a workspace designed for analysts.</p>
+
+            {% if error %}
+                <p class="status alert">{{ error }}</p>
+            {% else %}
+                <p class="status ok">
+                    {% if source == "anomaly" %}
+                        AI scores are loaded from <code>trained_models/anomaly_scores.csv</code>.
+                    {% else %}
+                        Showing parsed logs from <code>logs_dataset.csv</code>. Run <code>train_models.py</code> to add AI predictions.
+                    {% endif %}
+                </p>
+
+                <div class="grid">
+                    <div class="metric">
+                        <div class="metric-label">Total Rows</div>
+                        <div class="metric-value">{{ metrics.total_rows }}</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Providers</div>
+                        <div class="metric-value">{{ metrics.providers }}</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Event IDs</div>
+                        <div class="metric-value">{{ metrics.event_ids }}</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Anomalies</div>
+                        <div class="metric-value">{{ metrics.anomalies }}</div>
+                    </div>
+                </div>
+            {% endif %}
+        </section>
+
+        {% if not error %}
+            <section class="panel">
+                <h2>Filters</h2>
+                <form class="filters" method="get">
+                    <div>
+                        <label for="provider">Provider</label>
+                        <select id="provider" name="provider">
+                            <option value="">All providers</option>
+                            {% for provider in filter_options.providers %}
+                                <option value="{{ provider }}" {% if filters.provider == provider %}selected{% endif %}>{{ provider }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="level">Level</label>
+                        <select id="level" name="level">
+                            <option value="">All levels</option>
+                            {% for level in filter_options.levels %}
+                                <option value="{{ level }}" {% if filters.level == level %}selected{% endif %}>{{ level }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="event_id">Event ID</label>
+                        <select id="event_id" name="event_id">
+                            <option value="">All event IDs</option>
+                            {% for event_id in filter_options.event_ids %}
+                                <option value="{{ event_id }}" {% if filters.event_id == event_id %}selected{% endif %}>{{ event_id }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="search">Search message</label>
+                        <input id="search" name="search" type="text" value="{{ filters.search }}" placeholder="login failure, service, error...">
+                    </div>
+
+                    <div>
+                        <label>Options</label>
+                        <div class="checkbox">
+                            <input id="only_anomalies" name="only_anomalies" type="checkbox" value="1" {% if filters.only_anomalies %}checked{% endif %}>
+                            <label for="only_anomalies" style="margin: 0;">Only anomalies</label>
+                        </div>
+                        <div class="actions">
+                            <button class="btn btn-primary" type="submit">Apply</button>
+                            <a class="btn btn-secondary" href="/">Reset</a>
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+            <section class="panel">
+                <h2>All Logs</h2>
+                <p class="muted">Showing up to 250 rows in the browser for speed.</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                {% for column in table_columns %}
+                                    <th>{{ column }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in table_rows %}
+                                <tr>
+                                    {% for column in table_columns %}
+                                        <td>{{ row[column] }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            {% if suspicious_rows %}
+                <section class="panel">
+                    <h2>Suspicious Logs</h2>
+                    <p class="muted">Top anomaly rows ranked by ensemble votes and isolation forest score.</p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    {% for column in suspicious_columns %}
+                                        <th>{{ column }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in suspicious_rows %}
+                                    <tr>
+                                        {% for column in suspicious_columns %}
+                                            <td>{{ row[column] }}</td>
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>
