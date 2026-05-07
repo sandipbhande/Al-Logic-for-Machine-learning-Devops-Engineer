@@ -18,4 +18,4 @@ jobs:
         ssh-keyscan github.com >> ~/.ssh/known_hosts
 
     - name: Test Connection
-      run: ssh -T git@github.com || true
+      run: ssh -T git@github.com 
