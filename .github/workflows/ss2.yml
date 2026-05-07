@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   ssh-test:
     runs-on: ubuntu-latest
@@ -16,8 +19,11 @@ jobs:
       - name: Setup SSH Key
         run: |
           mkdir -p ~/.ssh
+
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+
           chmod 600 ~/.ssh/id_ed25519
+
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
       - name: Test SSH Connection
