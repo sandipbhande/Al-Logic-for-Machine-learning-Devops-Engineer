@@ -1,12 +1,9 @@
-name: Docker Installation
+name: Docker Install
 
 on:
   push:
     branches:
       - main
-
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   docker:
@@ -17,23 +14,26 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Update Ubuntu
+      - name: Remove Old Docker Packages
         run: |
-          sudo apt update
+          sudo apt-get remove -y containerd containerd.io docker.io docker-ce docker-ce-cli || true
+
+      - name: Update Packages
+        run: |
+          sudo apt-get update
 
       - name: Install Docker
         run: |
-          sudo apt install -y docker.io
+          sudo apt-get install -y docker.io
 
-      - name: Check Docker Version
+      - name: Start Docker
+        run: |
+          sudo systemctl start docker
+
+      - name: Docker Version
         run: |
           docker --version
 
-      - name: Start Docker Service
-        run: |
-          sudo systemctl start docker
-          sudo systemctl enable docker
-
       - name: Test Docker
         run: |
-          sudo docker run hello-world
+          docker run hello-world
