@@ -1,4 +1,4 @@
-name: GitHub SSH Connection
+name: Docker Installation
 
 on:
   push:
@@ -9,23 +9,31 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  ssh-test:
+  docker:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup SSH Key
+      - name: Update Ubuntu
         run: |
-          mkdir -p ~/.ssh
+          sudo apt update
 
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-
-          chmod 600 ~/.ssh/id_ed25519
-
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-      - name: Test SSH Connection
+      - name: Install Docker
         run: |
-          ssh -o StrictHostKeyChecking=no -T git@github.com || true
+          sudo apt install -y docker.io
+
+      - name: Check Docker Version
+        run: |
+          docker --version
+
+      - name: Start Docker Service
+        run: |
+          sudo systemctl start docker
+          sudo systemctl enable docker
+
+      - name: Test Docker
+        run: |
+          sudo docker run hello-world
